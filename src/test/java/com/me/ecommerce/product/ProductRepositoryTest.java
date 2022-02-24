@@ -1,5 +1,6 @@
 package com.me.ecommerce.product;
 
+import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -50,6 +52,22 @@ class ProductRepositoryTest {
 
         // Assert
         System.out.println(result.toString());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should return product when find by a specific product id")
+    void findByIdWithExistingProduct() {
+        Product test1 = new Product(100, "Test1", 10.0f, "Contain keyword", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        productRepository.save(test1);
+        Optional<Product> result = productRepository.findById(100);
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    @DisplayName("Should return None when find by non-existing product id")
+    void findByIdWithNonExistingProduct() {
+        Optional<Product> result = productRepository.findById(100);
         assertTrue(result.isEmpty());
     }
 }
