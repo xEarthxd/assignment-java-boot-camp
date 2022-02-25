@@ -27,7 +27,7 @@ public class CartService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
-    public void addItemToCart(int userId, int itemId, int quantity) {
+    public String addItemToCart(int userId, int itemId, int quantity) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         Product productToAdd = productRepository.getById(itemId);
 
@@ -44,6 +44,8 @@ public class CartService {
             cartItemRepository.save(cartItem);
         }
 
+        // TODO: Better serialize output and include Error Handling
+        return String.format("Successfully added %d quantity of productId: %d for user: %d", quantity, itemId, userId);
     }
 
     private int createCartFromUserId(int userId) {
