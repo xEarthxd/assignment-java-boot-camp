@@ -20,7 +20,7 @@ public class ProductService {
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
-    Optional<Product> getById(int id) {
+    public Optional<Product> getById(int id) {
         return productRepository.findById(id);
-    };
+    }
 }
