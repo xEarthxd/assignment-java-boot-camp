@@ -23,7 +23,7 @@ CREATE TABLE product (
 DROP TABLE IF EXISTS cart;
 
 CREATE TABLE cart (
-    id  INTEGER PRIMARY KEY,
+    id  INTEGER AUTO_INCREMENT PRIMARY KEY,
     user_id  INTEGER,
     created_at  TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id)
@@ -32,7 +32,7 @@ CREATE TABLE cart (
 DROP TABLE IF EXISTS cart_item;
 
 CREATE TABLE cart_item (
-    id  INTEGER PRIMARY KEY,
+    id  INTEGER AUTO_INCREMENT PRIMARY KEY,
     cart_id  INTEGER,
     product_id INTEGER,
     quantity  INTEGER,
