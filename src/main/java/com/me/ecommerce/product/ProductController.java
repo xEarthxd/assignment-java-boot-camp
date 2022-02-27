@@ -1,5 +1,6 @@
 package com.me.ecommerce.product;
 
+import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,14 +16,11 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepo;
-
-    @Autowired
     private ProductService productService;
 
     @GetMapping(value="/api/products")
-    public List<Product> getAllProduct() {
-        return productRepo.findAll();
+    public List<ProductResponse> getAllProduct() {
+        return productService.getAllProduct();
     }
 
     @GetMapping(value="/api/products", params="keyword")

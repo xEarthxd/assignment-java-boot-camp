@@ -2,6 +2,7 @@ package com.me.ecommerce;
 
 import com.me.ecommerce.cart.message.AddItemRequest;
 import com.me.ecommerce.cart.message.ViewCartResponse;
+import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ class ApplicationFlowsTest {
     void applicationFlowTest() {
         // ------------------
         // Get all products
-        Product[] getAllProductRes = testRestTemplate.getForObject("/api/products", Product[].class);
+        ProductResponse[] getAllProductRes = testRestTemplate.getForObject("/api/products", ProductResponse[].class);
         assertEquals(20, getAllProductRes.length);
 
         // ------------------

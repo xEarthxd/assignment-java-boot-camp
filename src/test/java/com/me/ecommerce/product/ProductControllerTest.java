@@ -1,5 +1,6 @@
 package com.me.ecommerce.product;
 
+import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,21 @@ class ProductControllerTest {
 
     @Test
     void shouldReturnTwentyElementsWhenRequestingForAllProducts() {
+
         // Arrange
-        /*
-            Since we are using data.sql to pre-insert the data
-            this test will also use the same datasource
-            (which should not happen because test needs to be isolated)
-            we will improve this when implementing Postgres for main app
-        */
+        List<ProductResponse> stubProducts = new ArrayList<>();
+        stubProducts.add(new ProductResponse(100, "Test1", 10.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(101, "test2", 20.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(102, "tEst3", 40.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(103, "ProductX", 40.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(104, "ProductY", 40.0f, "Mock Product .."));
+        when(productService.getAllProduct()).thenReturn(stubProducts);
 
         // Act
-        Product[] result = testRestTemplate.getForObject("/api/products", Product[].class);
+        ProductResponse[] result = testRestTemplate.getForObject("/api/products", ProductResponse[].class);
 
         // Assert
-        assertEquals(20, result.length);
+        assertEquals(5, result.length);
     }
 
     @Test

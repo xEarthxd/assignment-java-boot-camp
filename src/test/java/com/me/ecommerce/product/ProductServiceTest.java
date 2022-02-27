@@ -1,5 +1,6 @@
 package com.me.ecommerce.product;
 
+import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,28 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Test
+    @DisplayName("Should return 5 products from repository when calling getAllProduct")
+    void getAllProductsTest() {
+        // Arrange
+        List<Product> stubProducts = new ArrayList<>();
+        stubProducts.add(new Product(100, "Test1", 10.0f, "Mock Product ..", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        stubProducts.add(new Product(101, "test2", 20.0f, "Mock Product ..", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        stubProducts.add(new Product(102, "tEst3", 40.0f, "Mock Product ..", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        stubProducts.add(new Product(103, "ProductX", 40.0f, "Mock Product ..", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        stubProducts.add(new Product(104, "ProductY", 40.0f, "Mock Product ..", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        when(productRepository.findAll()).thenReturn(stubProducts);
+
+        ProductService productService = new ProductService();
+        productService.setRepository(productRepository);
+
+        // Act
+        List<ProductResponse> result = productService.getAllProduct();
+
+        // Assert
+        assertEquals(5, result.size());
+    }
 
     @Test
     @DisplayName("Should return 3 products containing 'test' keyword from repository regardless case sensitivity")
