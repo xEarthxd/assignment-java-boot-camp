@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -65,9 +64,9 @@ class ProductControllerTest {
         when(productService.getById(100)).thenReturn(Optional.of(product));
 
         // Act
-        Optional<Product> result = productService.getById(100);
+        Product result = testRestTemplate.getForObject("/api/products/100", Product.class);
 
         // Assert
-        assertTrue(result.isPresent());
+        assertEquals("Test1", result.getName());
     }
 }
