@@ -1,14 +1,12 @@
 package com.me.ecommerce.product;
 
 import com.me.ecommerce.product.message.ProductResponse;
-import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +52,7 @@ class ProductControllerTest {
         when(productService.getAllByKeyword("test")).thenReturn(stubProducts);
 
         // Act
-        Product[] result = testRestTemplate.getForObject("/api/products?keyword=test", Product[].class);
+        ProductResponse[] result = testRestTemplate.getForObject("/api/products?keyword=test", ProductResponse[].class);
 
         // Assert
         assertEquals(3, result.length);
@@ -63,11 +61,11 @@ class ProductControllerTest {
     @Test
     void shouldReturnProductWhenRequestedWithProductId() {
         // Arrange
-        Product product = new Product(100, "Test1", 10.0f, "Contain keyword", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        ProductResponse product = new ProductResponse(100, "Test1", 10.0f, "Mock Product ..");
         when(productService.getById(100)).thenReturn(Optional.of(product));
 
         // Act
-        Product result = testRestTemplate.getForObject("/api/products/100", Product.class);
+        ProductResponse result = testRestTemplate.getForObject("/api/products/100", ProductResponse.class);
 
         // Assert
         assertEquals("Test1", result.getName());

@@ -34,7 +34,13 @@ public class ProductService {
         return allProducts;
     }
 
-    public Optional<Product> getById(int id) {
-        return productRepository.findById(id);
+    public Optional<ProductResponse> getById(int id) {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()) {
+            Product p = product.get();
+            return Optional.of(new ProductResponse(p.getId(), p.getName(), p.getPrice(), p.getDescription()));
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -75,7 +75,7 @@ class ProductServiceTest {
         productService.setRepository(productRepository);
 
         // Act
-        Optional<Product> result = productService.getById(100);
+        Optional<ProductResponse> result = productService.getById(100);
 
         // Assert
         assertTrue(result.isPresent());
@@ -91,7 +91,7 @@ class ProductServiceTest {
         productService.setRepository(productRepository);
 
         // Act
-        Optional<Product> result = productService.getById(100);
+        Optional<ProductResponse> result = productService.getById(100);
 
         // Assert
         assertTrue(result.isEmpty());
