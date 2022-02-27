@@ -15,11 +15,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<ProductResponse> getAllProduct() {
-        List<ProductResponse> allProducts = new ArrayList<>();
-        for (Product product : productRepository.findAll()) {
-            allProducts.add(new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()));
-        }
-        return allProducts;
+        return toProductResponse(productRepository.findAll());
     }
 
     public void setRepository(ProductRepository productRepository) {
@@ -27,11 +23,7 @@ public class ProductService {
     }
 
     List<ProductResponse> getAllByKeyword(String keyword) {
-        List<ProductResponse> allProducts = new ArrayList<>();
-        for (Product product : productRepository.findByNameContainingIgnoreCase(keyword)) {
-            allProducts.add(new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()));
-        }
-        return allProducts;
+        return toProductResponse(productRepository.findByNameContainingIgnoreCase(keyword));
     }
 
     public Optional<ProductResponse> getById(int id) {
@@ -42,5 +34,13 @@ public class ProductService {
         } else {
             return Optional.empty();
         }
+    }
+
+    private List<ProductResponse> toProductResponse(List<Product> listOfProducts) {
+        List<ProductResponse> listOfProductsResponse = new ArrayList<>();
+        for (Product product : listOfProducts) {
+            listOfProductsResponse.add(new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()));
+        }
+        return listOfProductsResponse;
     }
 }
