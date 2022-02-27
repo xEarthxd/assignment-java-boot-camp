@@ -51,7 +51,6 @@ class ProductRepositoryTest {
         List<Product> result = productRepository.findByNameContainingIgnoreCase("test");
 
         // Assert
-        System.out.println(result.toString());
         assertTrue(result.isEmpty());
     }
 

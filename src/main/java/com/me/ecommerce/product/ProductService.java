@@ -26,8 +26,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    List<Product> getAllByKeyword(String keyword) {
-        return productRepository.findByNameContainingIgnoreCase(keyword);
+    List<ProductResponse> getAllByKeyword(String keyword) {
+        List<ProductResponse> allProducts = new ArrayList<>();
+        for (Product product : productRepository.findByNameContainingIgnoreCase(keyword)) {
+            allProducts.add(new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription()));
+        }
+        return allProducts;
     }
 
     public Optional<Product> getById(int id) {

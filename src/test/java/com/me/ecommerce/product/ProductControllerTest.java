@@ -47,10 +47,10 @@ class ProductControllerTest {
     @Test
     void shouldReturnProductsContainingKeywordRequestedWithKeywordQueryString() {
         // Arrange
-        List<Product> stubProducts = new ArrayList<>();
-        stubProducts.add(new Product(100, "Test1", 10.0f, "Contain keyword", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
-        stubProducts.add(new Product(101, "test2", 20.0f, "Contain keyword", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
-        stubProducts.add(new Product(102, "tEst3", 40.0f, "Contain keyword", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis())));
+        List<ProductResponse> stubProducts = new ArrayList<>();
+        stubProducts.add(new ProductResponse(100, "Test1", 10.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(101, "test2", 20.0f, "Mock Product .."));
+        stubProducts.add(new ProductResponse(102, "tEst3", 40.0f, "Mock Product .."));
         when(productService.getAllByKeyword("test")).thenReturn(stubProducts);
 
         // Act

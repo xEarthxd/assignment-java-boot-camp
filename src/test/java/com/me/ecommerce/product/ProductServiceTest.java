@@ -58,7 +58,7 @@ class ProductServiceTest {
         productService.setRepository(productRepository);
 
         // Act
-        List<Product> result = productService.getAllByKeyword("test");
+        List<ProductResponse> result = productService.getAllByKeyword("test");
 
         // Assert
         assertEquals(3, result.size());

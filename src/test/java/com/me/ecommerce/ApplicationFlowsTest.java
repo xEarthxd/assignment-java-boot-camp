@@ -31,7 +31,7 @@ class ApplicationFlowsTest {
 
         // ------------------
         // Get products by keyword "men"
-        Product[] productByKeywordRes = testRestTemplate.getForObject("/api/products?keyword=men", Product[].class);
+        ProductResponse[] productByKeywordRes = testRestTemplate.getForObject("/api/products?keyword=men", ProductResponse[].class);
         assertEquals(11, productByKeywordRes.length);
 
         // ------------------

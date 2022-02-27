@@ -24,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping(value="/api/products", params="keyword")
-    public List<Product> getAllByKeyword(@RequestParam(name="keyword") String keyword) {
+    public List<ProductResponse> getAllByKeyword(@RequestParam(name="keyword") String keyword) {
         return productService.getAllByKeyword(keyword);
     }
 
