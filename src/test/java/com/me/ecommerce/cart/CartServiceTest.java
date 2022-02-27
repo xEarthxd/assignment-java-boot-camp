@@ -7,6 +7,7 @@ import com.me.ecommerce.product.ProductRepository;
 import com.me.ecommerce.product.model.Product;
 import com.me.ecommerce.user.UserRepository;
 import com.me.ecommerce.user.model.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,6 +41,7 @@ class CartServiceTest {
     private CartItemRepository cartItemRepository;
 
     @Test
+    @DisplayName("Should call addItemToCart twice when we add item to cart 2 times")
     void addItemToCartWhenCartExisted() {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
 
@@ -61,7 +63,8 @@ class CartServiceTest {
     }
 
     @Test
-    void viewCart() {
+    @DisplayName("Should return 2 products (as we setup) when calling view cart service")
+    void viewCartTest() {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
 
         User mockUser = new User(100, "John", "Doe", "Address Mock", ts, ts);
