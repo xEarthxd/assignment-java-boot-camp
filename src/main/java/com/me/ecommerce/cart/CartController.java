@@ -27,4 +27,8 @@ public class CartController {
         return new ResponseEntity<ViewCartResponse>(cartService.viewCart(userId), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/cart/checkout")
+    public ResponseEntity<CheckoutResponse> checkoutCart(@RequestHeader("user-id") int userId) {
+        return new ResponseEntity<CheckoutResponse>(cartService.checkoutCart(userId), HttpStatus.OK);
+    }
 }
