@@ -1,6 +1,7 @@
 package com.me.ecommerce;
 
 import com.me.ecommerce.cart.message.AddItemRequest;
+import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
@@ -63,6 +64,11 @@ class ApplicationFlowsTest {
         ViewCartResponse cartResponse2 = viewCartRes2.getBody();
 
         assertEquals(2, cartResponse2.getCount());
+
+        // Checkout cart
+        ResponseEntity<CheckoutResponse> checkoutCart = testRestTemplate.exchange("/api/cart/checkout", HttpMethod.GET, new HttpEntity<>(headers), CheckoutResponse.class);
+        assertEquals(1, checkoutCart.getBody().getUserId());
+        assertEquals("Successfully checked out", checkoutCart.getBody().getMessage());
 
     }
 
