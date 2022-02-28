@@ -1,5 +1,6 @@
 package com.me.ecommerce.cart;
 
+import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ItemInfo;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import com.me.ecommerce.cart.model.Cart;

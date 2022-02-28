@@ -1,4 +1,4 @@
-package com.me.ecommerce.cart;
+package com.me.ecommerce.cart.message;
 
 public class CheckoutResponse {
     private int userId;

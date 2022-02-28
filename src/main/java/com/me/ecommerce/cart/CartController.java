@@ -1,6 +1,7 @@
 package com.me.ecommerce.cart;
 
 import com.me.ecommerce.cart.message.AddItemRequest;
+import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
