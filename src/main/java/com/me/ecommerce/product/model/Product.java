@@ -1,6 +1,7 @@
 package com.me.ecommerce.product.model;
 
 import com.me.ecommerce.cart.model.CartItem;
+import com.me.ecommerce.order.model.OrderItem;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<CartItem> cartItems;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems;
 
     public Product() {}
 

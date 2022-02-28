@@ -20,7 +20,7 @@ public class Cart {
     @Column(name="created_at")
     private Timestamp createdAt;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems;
 
     public Cart() {}
