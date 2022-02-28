@@ -1,6 +1,5 @@
-package com.me.ecommerce.order;
+package com.me.ecommerce.order.model;
 
-import com.me.ecommerce.cart.model.CartItem;
 import com.me.ecommerce.user.model.User;
 
 import javax.persistence.*;
@@ -79,5 +78,13 @@ public class Order {
 
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }

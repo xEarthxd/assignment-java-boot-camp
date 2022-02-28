@@ -1,4 +1,4 @@
-package com.me.ecommerce.order;
+package com.me.ecommerce.order.model;
 
 import com.me.ecommerce.product.model.Product;
 
