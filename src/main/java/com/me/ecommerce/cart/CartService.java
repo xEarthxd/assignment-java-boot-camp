@@ -4,6 +4,7 @@ import com.me.ecommerce.cart.message.ItemInfo;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import com.me.ecommerce.cart.model.Cart;
 import com.me.ecommerce.cart.model.CartItem;
+import com.me.ecommerce.order.OrderService;
 import com.me.ecommerce.product.ProductRepository;
 import com.me.ecommerce.product.model.Product;
 import com.me.ecommerce.user.UserRepository;
@@ -30,6 +31,9 @@ public class CartService {
 
     @Autowired
     private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private OrderService orderService;
 
     public String addItemToCart(int userId, int itemId, int quantity) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -75,5 +79,16 @@ public class CartService {
             cartResult = new ViewCartResponse(userId, cartId, 0, new ArrayList<>());
         }
         return cartResult;
+    }
+
+    public CheckoutResponse checkoutCart(int userId) {
+        User user = userRepository.getById(userId);
+        Optional<Cart> userCart = cartRepository.findByUserId(userId);
+
+        // Refactor: Use Success/Failure here instead of returning void from service
+        int orderId = orderService.createOrderAndOrderItem(user, userCart.get().getCartItems());
+        cartRepository.delete(userCart.get());
+
+        return new CheckoutResponse(userId, orderId, "Successfully checked out");
     }
 }
