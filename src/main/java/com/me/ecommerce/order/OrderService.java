@@ -38,12 +38,14 @@ public class OrderService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public void createOrderAndOrderItem(User user, List<CartItem> cartItems) {
+    public int createOrderAndOrderItem(User user, List<CartItem> cartItems) {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         Order order = new Order(user, "IN_PROGRESS", ts, ts);
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        orderRepository.flush();
         for(CartItem cartItem : cartItems) {
             orderItemRepository.save(new OrderItem(order, cartItem.getProduct(), cartItem.getQuantity(), ts, ts));
         }
+        return savedOrder.getId();
     }
 }

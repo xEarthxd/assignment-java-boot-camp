@@ -49,11 +49,10 @@ class OrderServiceTest {
         List<CartItem> mockItems = new ArrayList<>();
         mockItems.add(mockItem1);
         mockItems.add(mockItem2);
-
+        when(orderRepository.save(any())).thenReturn(new Order(mockUser, "IN_PROGRESS", ts, ts));
         orderService.createOrderAndOrderItem(mockUser, mockItems);
 
         verify(orderRepository, times(1)).save(any(Order.class));
         verify(orderItemRepository, times(2)).save(any(OrderItem.class));
-
     }
 }
