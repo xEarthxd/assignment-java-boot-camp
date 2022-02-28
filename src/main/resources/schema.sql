@@ -44,10 +44,10 @@ CREATE TABLE cart_item (
 
 DROP TABLE IF EXISTS `order`;
 
-CREATE TABLE `order` (
-    id  INTEGER PRIMARY KEY,
+CREATE TABLE order_t (
+    id  INTEGER AUTO_INCREMENT PRIMARY KEY,
     user_id  INTEGER,
-    status  INTEGER, -- Will be replaced with enum when implementing order flow
+    status  VARCHAR(64), -- Will be replaced with enum when implementing order flow
     created_at  TIMESTAMP,
     modified_at  TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id)
@@ -56,12 +56,12 @@ CREATE TABLE `order` (
 DROP TABLE IF EXISTS order_item;
 
 CREATE TABLE order_item (
-    id  INTEGER PRIMARY KEY,
+    id  INTEGER AUTO_INCREMENT PRIMARY KEY,
     order_id INTEGER,
     product_id  INTEGER,
     quantity  INTEGER,
     created_at  TIMESTAMP,
     modified_at  TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES `order`(id),
+    FOREIGN KEY (order_id) REFERENCES order_t(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
