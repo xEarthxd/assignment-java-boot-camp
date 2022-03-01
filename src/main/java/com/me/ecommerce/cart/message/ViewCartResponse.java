@@ -1,7 +1,7 @@
 package com.me.ecommerce.cart.message;
 
 
-import org.springframework.stereotype.Component;
+import com.me.ecommerce.shared_components.model.ItemInfo;
 
 import java.util.List;
 
