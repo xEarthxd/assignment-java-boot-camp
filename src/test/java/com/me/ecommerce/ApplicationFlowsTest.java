@@ -3,16 +3,14 @@ package com.me.ecommerce;
 import com.me.ecommerce.cart.message.AddItemRequest;
 import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ViewCartResponse;
+import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,6 +68,16 @@ class ApplicationFlowsTest {
         assertEquals(1, checkoutCart.getBody().getUserId());
         assertEquals("Successfully checked out", checkoutCart.getBody().getMessage());
 
+        // View orders
+        HttpHeaders headersViewOrder = new HttpHeaders();
+        headersViewOrder.add("user-id", "1");
+        headersViewOrder.add("order-id", "1");
+
+        ResponseEntity<ViewOrderResponse> viewOrderResponse = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersViewOrder), ViewOrderResponse.class);
+
+        assertEquals(HttpStatus.OK, viewOrderResponse.getStatusCode());
+        assertEquals(2, viewOrderResponse.getBody().getItems().size());
+        assertEquals(218.0f, viewOrderResponse.getBody().getAmount());
     }
 
 }
