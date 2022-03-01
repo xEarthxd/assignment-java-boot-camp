@@ -1,7 +1,7 @@
 package com.me.ecommerce.cart;
 
 import com.me.ecommerce.cart.message.AddItemRequest;
-import com.me.ecommerce.cart.message.ItemInfo;
+import com.me.ecommerce.shared_components.model.ItemInfo;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

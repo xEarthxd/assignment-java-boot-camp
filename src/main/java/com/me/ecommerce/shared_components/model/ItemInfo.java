@@ -1,4 +1,4 @@
-package com.me.ecommerce.cart.message;
+package com.me.ecommerce.shared_components.model;
 
 public class ItemInfo {
     int productId;

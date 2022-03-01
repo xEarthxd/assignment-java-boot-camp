@@ -1,7 +1,7 @@
 package com.me.ecommerce.cart;
 
 import com.me.ecommerce.cart.message.CheckoutResponse;
-import com.me.ecommerce.cart.message.ItemInfo;
+import com.me.ecommerce.shared_components.model.ItemInfo;
 import com.me.ecommerce.cart.message.ViewCartResponse;
 import com.me.ecommerce.cart.model.Cart;
 import com.me.ecommerce.cart.model.CartItem;
