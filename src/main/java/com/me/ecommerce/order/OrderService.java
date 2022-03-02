@@ -1,13 +1,15 @@
 package com.me.ecommerce.order;
 
 import com.me.ecommerce.cart.model.CartItem;
+import com.me.ecommerce.gateway.PaymentGateway;
+import com.me.ecommerce.gateway.model.PaymentResponse;
+import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.order.model.Order;
 import com.me.ecommerce.order.model.OrderItem;
-import com.me.ecommerce.product.model.Product;
-import com.me.ecommerce.shared_components.model.ItemInfo;
 import com.me.ecommerce.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -23,7 +25,18 @@ public class OrderService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private PaymentGateway paymentGateway;
+
     public OrderService() {
+    }
+
+    public PaymentGateway getPaymentGateway() {
+        return paymentGateway;
+    }
+
+    public void setPaymentGateway(PaymentGateway paymentGateway) {
+        this.paymentGateway = paymentGateway;
     }
 
     public OrderRepository getOrderRepository() {
@@ -63,4 +76,27 @@ public class OrderService {
             return Optional.empty();
         }
     }
+
+    public PaymentResponse payOrder(PayOrderRequest request) {
+        Optional<Order> order = orderRepository.findByIdAndUserId(request.getOrderId(), request.getUserId());
+        if(order.isEmpty()) {
+            return new PaymentResponse(HttpStatus.NOT_FOUND, "Order cannot be found for userId: "+request.getUserId());
+        }
+
+        PaymentResponse paymentResponse;
+        switch (request.getPaymentChannel()) {
+            case "CARD":
+                paymentResponse = paymentGateway.payWithCard(request.getCardInfo(), request.getAmount());
+                if(paymentResponse.getStatus() == HttpStatus.OK) {
+                    Order userOrder = order.get();
+                    userOrder.setStatus("PAID");
+                    orderRepository.save(userOrder);
+                }
+                break;
+            default:
+                paymentResponse = new PaymentResponse(HttpStatus.BAD_REQUEST, "PaymentChannel not supported");
+        }
+        return paymentResponse;
+    }
+
 }
