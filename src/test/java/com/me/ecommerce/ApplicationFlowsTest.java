@@ -3,9 +3,11 @@ package com.me.ecommerce;
 import com.me.ecommerce.cart.message.AddItemRequest;
 import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ViewCartResponse;
+import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.product.message.ProductResponse;
 import com.me.ecommerce.product.model.Product;
+import com.me.ecommerce.shared_components.model.CardInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,6 +80,17 @@ class ApplicationFlowsTest {
         assertEquals(HttpStatus.OK, viewOrderResponse.getStatusCode());
         assertEquals(2, viewOrderResponse.getBody().getItems().size());
         assertEquals(218.0f, viewOrderResponse.getBody().getAmount());
+        assertEquals("IN_PROGRESS", viewOrderResponse.getBody().getOrderStatus());
+
+        // Pay for order
+        CardInfo mockCardInfo = new CardInfo("John Doe", "5105105105105100", "849", "23/10");
+        PayOrderRequest mockReqBody = new PayOrderRequest(1, 1, "CARD", mockCardInfo, 218.0f);
+
+        ResponseEntity<String> payResponse = testRestTemplate.postForEntity( "/api/order/pay", mockReqBody, String.class);
+
+        assertEquals(HttpStatus.OK, payResponse.getStatusCode());
+        ResponseEntity<ViewOrderResponse> viewPaidOrder = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersViewOrder), ViewOrderResponse.class);
+        assertEquals("PAID", viewPaidOrder.getBody().getOrderStatus());
     }
 
 }
