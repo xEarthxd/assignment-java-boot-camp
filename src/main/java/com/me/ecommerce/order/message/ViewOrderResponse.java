@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ViewOrderResponse {
     private int userId;
-    private int orderid;
+    private int orderId;
     private String orderStatus;
     private int count;
     private List<ItemInfo> items;
@@ -18,7 +18,7 @@ public class ViewOrderResponse {
 
     public ViewOrderResponse(int userId, int orderId, String orderStatus, int count, List<ItemInfo> items, float amount) {
         this.userId = userId;
-        this.orderid = orderId;
+        this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.count = count;
         this.items = items;
@@ -33,12 +33,12 @@ public class ViewOrderResponse {
         this.userId = userId;
     }
 
-    public int getOrderid() {
-        return orderid;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getCount() {
