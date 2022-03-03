@@ -91,7 +91,7 @@ class OrderServiceTest {
 
         // Assert
         assertEquals(2, viewOrder.getItems().size());
-        assertEquals(230.0f, viewOrder.getAmount());
+        assertEquals(620.0f, viewOrder.getAmount());
     }
 
     @Test
@@ -121,6 +121,13 @@ class OrderServiceTest {
 
         when(orderRepository.findByIdAndUserId(0, 100)).thenReturn(Optional.of(mockOrder));
 
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem1 = new OrderItem(mockOrder, mockProduct1, 1, ts, ts);
+        orderItems.add(orderItem1);
+        OrderItem orderItem2 = new OrderItem(mockOrder, mockProduct2, 1, ts, ts);
+        orderItems.add(orderItem2);
+        mockOrder.setOrderItems(orderItems);
+
         CardInfo mockCardInfo = new CardInfo("John Doe", "5105105105105100", "849", "23/10");
         PayOrderRequest mockReq = new PayOrderRequest(100, 0, "CARD", mockCardInfo, 230.0f);
 
@@ -147,6 +154,13 @@ class OrderServiceTest {
         Order mockOrder = new Order(mockUser, "IN_PROGRESS", ts, ts);
 
         when(orderRepository.findByIdAndUserId(0, 100)).thenReturn(Optional.of(mockOrder));
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem1 = new OrderItem(mockOrder, mockProduct1, 1, ts, ts);
+        orderItems.add(orderItem1);
+        OrderItem orderItem2 = new OrderItem(mockOrder, mockProduct2, 1, ts, ts);
+        orderItems.add(orderItem2);
+        mockOrder.setOrderItems(orderItems);
 
         CardInfo mockCardInfo = new CardInfo("John Doe", "9999999999", "999", "99/99");
         PayOrderRequest mockReq = new PayOrderRequest(100, 0, "CARD", mockCardInfo, 230.0f);
@@ -175,6 +189,13 @@ class OrderServiceTest {
 
         when(orderRepository.findByIdAndUserId(0, 100)).thenReturn(Optional.of(mockOrder));
 
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem1 = new OrderItem(mockOrder, mockProduct1, 1, ts, ts);
+        orderItems.add(orderItem1);
+        OrderItem orderItem2 = new OrderItem(mockOrder, mockProduct2, 1, ts, ts);
+        orderItems.add(orderItem2);
+        mockOrder.setOrderItems(orderItems);
+
         PayOrderRequest mockReq = new PayOrderRequest(100, 0, "LINE_PAY", null, 230.0f);
 
         // Act
@@ -200,5 +221,39 @@ class OrderServiceTest {
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, paymentResponse.getStatus());
         assertEquals("Order cannot be found for userId: 100", paymentResponse.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return 400 if payment amount and total amount from order mismatch")
+    void paymentAmountAndOrderTotalAmountMismatch() {
+        // Arrange
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        User mockUser = new User(100, "John", "Doe", "Address Mock", ts, ts);
+        Product mockProduct1 = new Product(100, "MockProduct1", 100.0f, "Mock Product For Test", ts, ts);
+        Product mockProduct2 = new Product(101, "MockProduct2", 130.0f, "Mock Product For Test", ts, ts);
+
+        Order mockOrder = new Order(mockUser, "IN_PROGRESS", ts, ts);
+
+        when(orderRepository.findByIdAndUserId(0, 100)).thenReturn(Optional.of(mockOrder));
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem1 = new OrderItem(mockOrder, mockProduct1, 1, ts, ts);
+        orderItems.add(orderItem1);
+        OrderItem orderItem2 = new OrderItem(mockOrder, mockProduct2, 1, ts, ts);
+        orderItems.add(orderItem2);
+        mockOrder.setOrderItems(orderItems);
+
+        CardInfo mockCardInfo = new CardInfo("John Doe", "5105105105105100", "849", "23/10");
+        PayOrderRequest mockReq = new PayOrderRequest(100, 0, "CARD", mockCardInfo, 230.0f);
+
+        PaymentResponse mockPaymentResponse = new PaymentResponse(HttpStatus.BAD_REQUEST, "Invalid payment amount: 230.0f [Should be: 150.0f]");
+        when(paymentGateway.payWithCard(mockCardInfo, 230.0f)).thenReturn(mockPaymentResponse);
+
+        // Act
+        PaymentResponse paymentResponse = orderService.payOrder(mockReq);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, paymentResponse.getStatus());
+        assertEquals("Invalid payment amount: 230.0f [Should be: 150.0f]", paymentResponse.getMessage());
     }
 }

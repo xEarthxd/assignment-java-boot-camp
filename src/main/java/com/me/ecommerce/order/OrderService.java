@@ -83,6 +83,10 @@ public class OrderService {
             return new PaymentResponse(HttpStatus.NOT_FOUND, "Order cannot be found for userId: "+request.getUserId());
         }
 
+        if(order.get().getTotalAmount() != request.getAmount()) {
+            return new PaymentResponse(HttpStatus.BAD_REQUEST, String.format("Invalid payment amount: %.2f [Should be: %.2f]", request.getAmount(), order.get().getTotalAmount()));
+        }
+
         PaymentResponse paymentResponse;
         switch (request.getPaymentChannel()) {
             case "CARD":

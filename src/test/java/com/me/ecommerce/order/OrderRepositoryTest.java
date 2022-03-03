@@ -57,7 +57,7 @@ class OrderRepositoryTest {
         Order orderResult = orderRepository.findByIdAndUserId(1, 100).get();
 
         assertEquals(2, orderResult.getOrderItems().size());
-        assertEquals(30.0f, orderResult.getTotalAmount());
+        assertEquals(90.0f, orderResult.getTotalAmount());
 
     }
 }
