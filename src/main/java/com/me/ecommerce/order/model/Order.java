@@ -94,9 +94,9 @@ public class Order {
     public float getTotalAmount() {
         float totalAmount = 0.0f;
         for (OrderItem item : this.orderItems) {
-            totalAmount += item.getProduct().getPrice();
+            totalAmount += item.getProduct().getPrice()*item.getQuantity();
         }
-        return totalAmount;
+        return (float) (Math.round(totalAmount * 100.0) / 100.0);
     }
 
     public List<ItemInfo> getItemInfo() {
