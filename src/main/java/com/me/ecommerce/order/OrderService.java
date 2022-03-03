@@ -94,6 +94,7 @@ public class OrderService {
                 if(paymentResponse.getStatus() == HttpStatus.OK) {
                     Order userOrder = order.get();
                     userOrder.setStatus("PAID");
+                    userOrder.setModifiedAt(new Timestamp(System.currentTimeMillis()));
                     orderRepository.save(userOrder);
                 }
                 break;
