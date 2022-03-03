@@ -3,6 +3,7 @@ package com.me.ecommerce;
 import com.me.ecommerce.cart.message.AddItemRequest;
 import com.me.ecommerce.cart.message.CheckoutResponse;
 import com.me.ecommerce.cart.message.ViewCartResponse;
+import com.me.ecommerce.order.message.OrderSummaryResponse;
 import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.product.message.ProductResponse;
@@ -65,23 +66,26 @@ class ApplicationFlowsTest {
 
         assertEquals(2, cartResponse2.getCount());
 
+        // ------------------
         // Checkout cart
         ResponseEntity<CheckoutResponse> checkoutCart = testRestTemplate.exchange("/api/cart/checkout", HttpMethod.GET, new HttpEntity<>(headers), CheckoutResponse.class);
         assertEquals(1, checkoutCart.getBody().getUserId());
         assertEquals("Successfully checked out", checkoutCart.getBody().getMessage());
 
+        // ------------------
         // View orders
-        HttpHeaders headersViewOrder = new HttpHeaders();
-        headersViewOrder.add("user-id", "1");
-        headersViewOrder.add("order-id", "1");
+        HttpHeaders headersUserAndOrderId = new HttpHeaders();
+        headersUserAndOrderId.add("user-id", "1");
+        headersUserAndOrderId.add("order-id", "1");
 
-        ResponseEntity<ViewOrderResponse> viewOrderResponse = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersViewOrder), ViewOrderResponse.class);
+        ResponseEntity<ViewOrderResponse> viewOrderResponse = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersUserAndOrderId), ViewOrderResponse.class);
 
         assertEquals(HttpStatus.OK, viewOrderResponse.getStatusCode());
         assertEquals(2, viewOrderResponse.getBody().getItems().size());
         assertEquals(218.0f, viewOrderResponse.getBody().getAmount());
         assertEquals("IN_PROGRESS", viewOrderResponse.getBody().getOrderStatus());
 
+        // ------------------
         // Pay for order
         CardInfo mockCardInfo = new CardInfo("John Doe", "5105105105105100", "849", "23/10");
         PayOrderRequest mockReqBody = new PayOrderRequest(1, 1, "CARD", mockCardInfo, 218.0f);
@@ -89,8 +93,18 @@ class ApplicationFlowsTest {
         ResponseEntity<String> payResponse = testRestTemplate.postForEntity( "/api/order/pay", mockReqBody, String.class);
 
         assertEquals(HttpStatus.OK, payResponse.getStatusCode());
-        ResponseEntity<ViewOrderResponse> viewPaidOrder = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersViewOrder), ViewOrderResponse.class);
+        ResponseEntity<ViewOrderResponse> viewPaidOrder = testRestTemplate.exchange("/api/order/view-items", HttpMethod.GET, new HttpEntity<>(headersUserAndOrderId), ViewOrderResponse.class);
         assertEquals("PAID", viewPaidOrder.getBody().getOrderStatus());
+
+        // Order Summary
+        ResponseEntity<OrderSummaryResponse> orderSummaryResponse = testRestTemplate.exchange("/api/order/summary", HttpMethod.GET, new HttpEntity<>(headersUserAndOrderId), OrderSummaryResponse.class);
+
+        assertEquals(HttpStatus.OK, orderSummaryResponse.getStatusCode());
+        assertEquals("INV-001", orderSummaryResponse.getBody().getInvoiceNo());
+        assertEquals("John Mayer", orderSummaryResponse.getBody().getName());
+        assertEquals("142/34-5  Bang Phueng, Pra Pradaeng, Samutprakarn, Thailand 10130", orderSummaryResponse.getBody().getShippingAddress());
+        assertEquals(218.0f, orderSummaryResponse.getBody().getAmount());
+        assertEquals(2, orderSummaryResponse.getBody().getCount());
     }
 
 }
