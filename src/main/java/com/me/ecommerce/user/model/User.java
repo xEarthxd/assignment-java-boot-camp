@@ -75,4 +75,8 @@ public class User {
         this.modifiedAt = modifiedAt;
     }
 
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+
 }

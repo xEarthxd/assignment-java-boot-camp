@@ -4,12 +4,14 @@ import com.me.ecommerce.cart.model.Cart;
 import com.me.ecommerce.cart.model.CartItem;
 import com.me.ecommerce.gateway.PaymentGateway;
 import com.me.ecommerce.gateway.model.PaymentResponse;
+import com.me.ecommerce.order.message.OrderSummaryResponse;
 import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.order.model.Order;
 import com.me.ecommerce.order.model.OrderItem;
 import com.me.ecommerce.product.model.Product;
 import com.me.ecommerce.shared_components.model.CardInfo;
+import com.me.ecommerce.user.UserRepository;
 import com.me.ecommerce.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,9 @@ class OrderServiceTest {
 
     @Mock
     private OrderItemRepository orderItemRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private PaymentGateway paymentGateway;
@@ -255,5 +260,38 @@ class OrderServiceTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, paymentResponse.getStatus());
         assertEquals("Invalid payment amount: 230.0f [Should be: 150.0f]", paymentResponse.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should return valid order summary when calling by user-id and order-id")
+    void orderSummaryTest() {
+        // Arrange
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        User mockUser = new User(100, "John", "Doe", "99/99 Address Mock", ts, ts);
+        Product mockProduct1 = new Product(100, "MockProduct1", 100.0f, "Mock Product For Test", ts, ts);
+        Product mockProduct2 = new Product(101, "MockProduct2", 130.0f, "Mock Product For Test", ts, ts);
+
+        Order mockOrder = new Order(mockUser, "IN_PROGRESS", ts, ts);
+
+        when(orderRepository.findByIdAndUserId(0, 100)).thenReturn(Optional.of(mockOrder));
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem1 = new OrderItem(mockOrder, mockProduct1, 1, ts, ts);
+        orderItems.add(orderItem1);
+        OrderItem orderItem2 = new OrderItem(mockOrder, mockProduct2, 1, ts, ts);
+        orderItems.add(orderItem2);
+        mockOrder.setOrderItems(orderItems);
+
+        when(userRepository.getById(100)).thenReturn(mockUser);
+
+        // Act
+        OrderSummaryResponse orderSummaryResponse = orderService.orderSummary(100, 0);
+
+        // Assert
+        assertEquals("INV-000", orderSummaryResponse.getInvoiceNo());
+        assertEquals("John Doe", orderSummaryResponse.getName());
+        assertEquals("99/99 Address Mock", orderSummaryResponse.getShippingAddress());
+        assertEquals(230.0f, orderSummaryResponse.getAmount());
+        assertEquals(2, orderSummaryResponse.getCount());
     }
 }

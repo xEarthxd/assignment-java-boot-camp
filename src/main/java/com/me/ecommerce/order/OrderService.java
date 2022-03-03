@@ -3,10 +3,12 @@ package com.me.ecommerce.order;
 import com.me.ecommerce.cart.model.CartItem;
 import com.me.ecommerce.gateway.PaymentGateway;
 import com.me.ecommerce.gateway.model.PaymentResponse;
+import com.me.ecommerce.order.message.OrderSummaryResponse;
 import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import com.me.ecommerce.order.model.Order;
 import com.me.ecommerce.order.model.OrderItem;
+import com.me.ecommerce.user.UserRepository;
 import com.me.ecommerce.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class OrderService {
 
     @Autowired
     private PaymentGateway paymentGateway;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public OrderService() {
     }
@@ -102,6 +107,25 @@ public class OrderService {
                 paymentResponse = new PaymentResponse(HttpStatus.BAD_REQUEST, "PaymentChannel not supported");
         }
         return paymentResponse;
+    }
+
+    public OrderSummaryResponse orderSummary(int userId, int orderId) {
+        User user = userRepository.getById(userId);
+        Order order = orderRepository.findByIdAndUserId(orderId, userId).get();
+
+        return new OrderSummaryResponse(
+                invoiceGenerator(orderId),
+                user.getFullName(),
+                user.getAddress(),
+                order.getModifiedAt().toString(),
+                order.getTotalAmount(),
+                order.getOrderItems().size(),
+                order.getItemInfo()
+        );
+    }
+
+    private String invoiceGenerator(int orderId) {
+        return String.format("INV-%03d", orderId);
     }
 
 }
