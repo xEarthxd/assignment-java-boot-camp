@@ -1,6 +1,7 @@
 package com.me.ecommerce.order;
 
 import com.me.ecommerce.gateway.model.PaymentResponse;
+import com.me.ecommerce.order.message.OrderSummaryResponse;
 import com.me.ecommerce.order.message.PayOrderRequest;
 import com.me.ecommerce.order.message.ViewOrderResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class OrderController {
     public ResponseEntity<String> payOrder(@RequestBody PayOrderRequest req) {
         PaymentResponse paymentResponse = orderService.payOrder(req);
         return new ResponseEntity<>(paymentResponse.getMessage(), paymentResponse.getStatus());
+    }
+
+    @GetMapping(value = "/api/order/summary")
+    public ResponseEntity<OrderSummaryResponse> orderSummary(@RequestHeader("user-id") int userId, @RequestHeader("order-id") int orderId) {
+        OrderSummaryResponse orderSummary = orderService.orderSummary(userId, orderId);
+        return new ResponseEntity<>(orderSummary, HttpStatus.OK);
     }
 
 }
